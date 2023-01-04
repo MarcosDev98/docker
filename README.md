@@ -218,3 +218,49 @@ Si después de agregar el usuario elimino el contenedor, obviamente pierdo todos
 
 Por lo cual, a continuación vamos a crear un  directorio en el cual vamos a tener una versión espejada del contenedor. Para eso vamos a usar una herramienta que se llama **Bind Mounts**
 ## Bind Mounts
+
+Creo el directorio en el cual voy a espejar el contenedor:
+```
+  $ mkdir mongodata
+```
+
+Una vez creado el directorio ya puedo crear el nuevo contenedor:
+```
+  $ docker run -d --name db -v /home/marcos/platzi/docker/dockerdata/mongodata:/data/db mongo
+```
+El flag -v indica que voy a hacer un bind mount y seguido le indico la ruta completa del directorio que voy a utilizar (lo que está a la izquierda de : ).  A la derecha de los : le indico la ruta dentro del contenedor. En este caso /data/db/ porque sé que es ahí donde mongo guarda los datos.
+
+Una vez creado el contenedor entro a él para utilizarlo y verificar que los datos se esten respaldando en la carpeta que yo especifiqué.
+
+```
+//Entro a mongo, inserto un usuario, salgo del contenedor y borro el contenedor.
+  $ docker exec -it db bash
+  $ mongosh
+  $ use platzi
+  $ db.users.insert({"nombre": "marcos"})
+  $ db.users.find()
+  $ exit
+  $ exit
+  $ docker rm -f db
+```
+Pero después de haber borrado el contenedor si ejecuto:
+```
+  $ ll mongodata
+```
+voy a ver que hay un montón de archivos que no estaban.
+
+Ahora si volvemos a repetir el proceso de crear el contenedor nuevamente agregando este mismo directorio, vamos a ver que podemos "recuperar" la información.
+
+```
+  $ docker run -d --name db -v /home/marcos/platzi/docker/dockerdata/mongodata:/data/db mongo
+  $ docker exec -it db bash
+  $ mongosh
+  $ use platzi
+  $ db.users.find()
+```
+
+#
+# Volúmenes
+
+Los volúmenes o volumes son una evolución de los bind mounts que docker desarrolló para darle mas seguridad a las personas que ejecutan docker en entornos productivos. 
+
