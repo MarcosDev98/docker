@@ -264,3 +264,33 @@ Ahora si volvemos a repetir el proceso de crear el contenedor nuevamente agregan
 
 Los volúmenes o volumes son una evolución de los bind mounts que docker desarrolló para darle mas seguridad a las personas que ejecutan docker en entornos productivos. 
 
+* Mostrar los volúmenes creados con:
+```
+  $ docker volume ls
+```
+* Creamos un nuevo volúmen:
+```
+  $ docker volume create <volume_name>
+```
+* A continuación vamos a crear un nuevo contenedor y vamos a montarle éste volúmen en el directorio donde la base de datos escribe. (como hicimos antes con bind mounts, pero ahora con volúmenes).
+```
+  $ docker run -d --name db --mount src=dbdata,dst=/data/db mongo
+```
+Una vez creado comprobamos que funciona de igual manera que cuando le monto un directorio, pero utilizando volúmenes, que son más seguros porque son  administrados por docker.
+```
+// entramos al contenedor y agregamos un nuevo dato en la bd.
+//luego borramos el contenedor y volvemos a crear otro utilizando el mismo volúmen y veremos que los datos persisten.
+
+$ docker exec -it db bash
+$ mongosh
+$ use platzi
+$ db.users.insert({"nombre": "marcos"})
+$ exit
+$ exit
+$ docker rm -f db
+$ docker run -d --name db --mount src=dbdata,dst=/data/db mongo
+$ docker exec -it db bash
+$ mongosh
+$ use platzi
+$ db.users.find()
+```
