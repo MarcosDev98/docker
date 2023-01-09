@@ -30,7 +30,7 @@ El empleo de **contenedores** para constuir y desplegar software.
 #
 # Arquitectura de Docker
 
-![Image Text](arquitectura-docker.png)
+![Arquitectura Docker](arquitectura-docker.png)
 Componentes DENTRO del circulo de Docker:
 
 * **Docker daemon**: Es el centro de docker, el corazón que gracias a el, podemos comunicarnos con los servicios de docker.
@@ -46,7 +46,7 @@ Dentro de la arquitectura de Docker encontramos:
 * **Redes**: Son las que permiten la comunicación entre contenedores.
 
 #
-![TextImage](docker-architecture.png)
+![Docker Architecture](docker-architecture.png)
 #
 
 ## Contenedores:
@@ -294,3 +294,36 @@ $ mongosh
 $ use platzi
 $ db.users.find()
 ```
+
+#
+# Introducir o extraer archivos de un contenedor
+
+Ahora vamos a ver como copiar un archivo desde nuestra máquina al contenedor.
+
+```
+// creamos un archivo txt vacio y un contenedor de ubuntu que se va mantener activo.
+  $ touch prueba.txt
+  $ docker run -d --name copytest  ubuntu tail -f /dev/null
+  $ docker exec -it copytest bash
+  $ mkdir testing
+  $ exit
+```
+
+Para copiar el archivo vamos a utilizar el siguiente comando:
+```
+  $ docker cp prueba.txt copytest:/testing/test.txt
+```
+En este caso copiamos el archivo desde nuestra máquina hacia el contenedor. Ahora hagamos lo contrario:
+```
+  $ docker cp copytest:/testing localtesting
+```
+
+![bind mounts vs volumes](bindmounts-volumes.webp)
+
+**Host:** Donde Docker esta instalado.
+
+**Bind Mount:** Guarda los archivos en la maquina local persistiendo y visualizando estos datos (No seguro).
+
+**Volume:** Guarda los archivos en el area de Docker donde Docker los administra (Seguro).
+
+**TMPFS Mount:** Guarda los archivos temporalmente y persiste los datos en la memoria del contenedor, cuando muera sus datos mueren con el contenedor.
