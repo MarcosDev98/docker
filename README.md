@@ -327,3 +327,69 @@ En este caso copiamos el archivo desde nuestra máquina hacia el contenedor. Aho
 **Volume:** Guarda los archivos en el area de Docker donde Docker los administra (Seguro).
 
 **TMPFS Mount:** Guarda los archivos temporalmente y persiste los datos en la memoria del contenedor, cuando muera sus datos mueren con el contenedor.
+
+#
+# Imágenes
+
+Las imágenes son una herramienta que utiliza docker para solucionar los problemas de construcción y distribución de software.
+
+###  Pero ¿Qué es una imágen?
+
+Las imagenes son plantillas o moldes a partir de las cuales docker crea contenedores. Una imágen es una pieza de software empaquetada de manera liviana que contiene todo lo necesario para que un contenedor pueda ejecutarse exitosamente (dependencias de bibliotecas nativas, código, herramientas, configuración, etc.)
+
+### Profundizando en el concepto de imágen
+
+![Concepto imágen](image.webp)
+ **Imágen:** una imágen contiene distintas capas de datos (diferentes softwares, librerías, configuración, etc.) donde cada una de estas capas es agregada a partir de una imágen base (base image).
+
+ ## Comandos de imágenes
+
+Listar imagenes
+ ```
+  $ docker image ls
+ ```
+
+Descargar una imagen, por defecto utiliza docker hub, pero podemos especificar otra ruta.
+```
+  $ docker pull <image_name>
+```
+
+## Utilizando Dockerfiles
+
+Creamos un nuevo directorio y dentro de él creamos un archivo Dockerfile.
+
+```
+  $ mkdir imagenes
+  $ cd imagenes
+  $ touch Dockerfile
+```
+
+![Dockerfile](dockerfile-code.png)
+
+En la línea 1 indicamos la imágen base que vamos a utilizar, en este caso la última version de ubuntu. Luego indicamos que queremos ejecutar un comando para crear un archivo .txt.
+
+Una vez guardado el dockerfile, vamos a crear una imagen a partir de ese dockerfile.
+
+```
+  $ docker build -t ubuntu:platzi .
+```
+Con el flag -t definimos el tag de la imagen. Seguido del tag, vamos a indicar la ruta del contexto de build, en este caso el directorio actual, por eso ponemos "." .
+
+Ahora si levantamos un contenedor con la imagen que acabamos de crear vamos a ver que ese archivo .txt que creamos, se encuentra y fue creado durante el tiempo de build.
+
+```
+  $ docker run -it ubuntu:platzi
+  $ ll /usr/src
+```
+
+También podemos publicar la imágen que acabamos de crear. Para eso primero debemos logearnos con nuestra cuenta de hub.docker.com.
+
+```
+  $ docker login
+```
+Además debemos cambiar el tag de la imágen, ya que sino intentaría subirla al repositorio oficial de ubuntu, al cual obviamente no tenemos permisos.
+
+```
+  $ docker tag ubuntu:platzi marcosdev98/ubuntu:platzi
+```
+Con éste comando podremos modificar el tag de una imágen. En este caso utilizaremos nuestro propio repositorio de docker hub para subir la nueva imágen.
