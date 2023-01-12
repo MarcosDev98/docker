@@ -393,3 +393,23 @@ Además debemos cambiar el tag de la imágen, ya que sino intentaría subirla al
   $ docker tag ubuntu:platzi marcosdev98/ubuntu:platzi
 ```
 Con éste comando podremos modificar el tag de una imágen. En este caso utilizaremos nuestro propio repositorio de docker hub para subir la nueva imágen.
+
+#
+# Usando Docker para desarrollar
+
+```
+  $ git clone https://github.com/platzi/docker
+```
+
+Clonamos el repositorio el cual contiene una app muy simple y un Dockerfile el cual vamos a buildear.
+
+```
+  $ docker build -t platziapp .
+```
+
+Ahora vamos a crear un contenedor con la imágen que acabamos de crear.
+```
+  $ docker run --rm -p 3000:3000 platziapp
+```
+El flag --rm indica que el contenedor se borre en cuanto se detenga, y con -p le indicamos que el puerto 3000 del contenedor va estar expuesto en el puerto 3000 de mí máquina.
+
