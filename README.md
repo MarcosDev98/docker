@@ -1,4 +1,4 @@
-comment
+
 # Virtualización
 
 ... versión virtual de algún recurso tecnológico, como (...) hardware, un sistema operativo, un dispositivo de almacenamiento o (...) recurso de red. 
